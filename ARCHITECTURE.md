@@ -581,9 +581,9 @@ class MemberResponseDTO(BaseModel):
 
 ---
 
-### 6. **Eventos de aplicación (Application Events)**
+### 6. **Eventos de DOMINIO**
 
-Los eventos en esta capa reflejan **acciones relevantes para el negocio** que pueden interesar a otras partes del sistema.
+Los eventos en esta capa reflejan **acciones relevantes para el negocio** que pueden interesar a otras partes del sistema. Son declarados en la capa de DOMINIO*
 
 Ejemplo (`events.py`):
 
@@ -599,6 +599,10 @@ class MemberRegisteredEvent:
 
 Estos eventos pueden ser publicados, por ejemplo, para enviar un correo de bienvenida o actualizar métricas.
 (Podrías usar un *Event Bus* inyectado por dependencia).
+
+La publicacion de eventos se puede hacer desde Application
+
+Igual que para los handlers de los eventos deben ir en Application
 
 ---
 
@@ -757,6 +761,8 @@ class MemberTable(SQLModel, table=True):
 
 Los mappers permiten traducir entre la entidad del dominio (`Member`) y la tabla de persistencia (`MemberTable`).
 
+**Esto tambien podria ser en el propio repositorio de la entidad**
+
 #### `mappers.py`
 
 ```python
@@ -787,7 +793,9 @@ def to_table(entity: Member) -> MemberTable:
 
 ### 6. **Repositorio (implementación concreta)**
 
-Aquí se implementan las interfaces del repositorio definidas en `application.members.interfaces`.
+Aquí se implementan las interfaces del repositorio definidas en `application.members.interfaces` o tambien puede ser en `domain/interfaces`.
+
+Para evitar el repetir la session se puede pasar por inyeccion de dependencias
 
 #### `repositories.py`
 
@@ -956,6 +964,8 @@ Lo usaremos para declarar un **contenedor de dependencias** más profesional que
 
 Actualizamos el contenedor anterior para usar `dependency_injector`:
 
+La inyeccion de dependencias no tiene que hacerse en infraestructura, no tiene por que ser en Application, Domain tampoco, ya que es como el pegamento que une las capas
+
 ```python
 # app/infrastructure/di/container.py
 from dependency_injector import containers, providers
@@ -985,9 +995,8 @@ class Container(containers.DeclarativeContainer):
 
 ---
 
-## 🧱 4. Manejo de excepciones de aplicación (`application_exceptions.py`)
+## 🧱 4. Manejo de excepciones, mapeo de excepciones y demas usando Exception Handlers de FastApi)
 
-Aquí definimos errores que pueden generarse dentro de los casos de uso.
 La idea es mantener **los errores del dominio limpios y semánticos**.
 
 ```python
@@ -1000,6 +1009,8 @@ class MemberAlreadyExistsError(ApplicationError):
 ```
 
 ---
+
+Yo pienso que podriamos tener solo el Handler respectivo e importar las excepciones y ahi personalizar, no es necesario este application_exceptions aqui, las excepciones de application van en la propia capa de Application
 
 ## 🚨 5. Mapeo de errores a HTTP (`http_error_handler.py`)
 
@@ -1028,7 +1039,7 @@ async def http_error_handler(request: Request, exc: Exception):
             content={"detail": "Error interno del servidor."}
         )
 ```
-
+Puede ser un middleware, pero https://fastapi.tiangolo.com/tutorial/handling-errors/#install-custom-exception-handlers puede ser usar @app.exception.handler
 ---
 
 ## 🧭 6. Controlador de miembros (`member_controller.py`)
