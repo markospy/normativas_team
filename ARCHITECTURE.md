@@ -1,3 +1,5 @@
+## ⚠️ Esta guia no esta concluida. Aun no debería tomarse como guia de trabajo. En cambio nuestra guia principal es el libro [Architecure Patterns with Python](https://www.cosmicpython.com/book/preface.html)
+
 [🧩 PARTE 1: Desarrollo detallado — Filosofía y estructura](#-parte-1---desarrollo-detallado--filosofía-y-estructura)
 
 [🧩 PARTE 2: CAPA DE DOMINIO](#-parte-2-capa-de-dominio)
