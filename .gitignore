@@ -5,4 +5,8 @@ __pycache__/
 *.pyd
 .Python
 env/
+<<<<<<< HEAD
 venv/ 
+=======
+venv/
+>>>>>>> 17e75b8a355cb6627740388d00da395905a4ca81
