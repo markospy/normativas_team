@@ -2,6 +2,7 @@ import datetime
 
 from exceptions import NoAvailableVet
 
+
 class BaseEntity:
     def model_dump(self):
         return self.__dict__
@@ -26,12 +27,12 @@ class Veterinarian(BaseEntity):
 
     def can_accept(self, appointment: AppointmentRequest) -> bool:
         return appointment.specialty == self.specialty and len(self._appointments) < self.max_daily_appointments
-    
+
     def assign(self, appointment: AppointmentRequest) -> True:
         if self.can_accept(appointment):
             self._appointments.add(appointment)
             return True
-        
+
         return False
 
 
