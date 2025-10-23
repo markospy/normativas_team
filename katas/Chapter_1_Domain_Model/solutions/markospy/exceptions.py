@@ -7,5 +7,5 @@ class NoAvailableVet(DomainError):
 
     message = "No available vet"
 
-    def __init__(self, message: str = None):
+    def __init__(self, message: str | None = None):
         super().__init__(message or self.message)
