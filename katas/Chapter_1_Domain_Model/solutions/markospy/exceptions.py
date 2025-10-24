@@ -3,6 +3,9 @@ class DomainError(Exception):
 
 
 class NoAvailableVet(DomainError):
-    def __init__(self):
-        self.message = "No available vet"
-        super().__init__(self.message)
+    """Excepción lanzada cuando no hay veterinarios disponibles."""
+
+    message = "No available vet"
+
+    def __init__(self, message: str | None = None):
+        super().__init__(message or self.message)
